@@ -41,7 +41,7 @@ public class CatalogService {
 
     @Transactional
     public MovieDto createMovie(CreateMovieRequest req) {
-        // Check for uniqueness first
+        // Check for uniqueness
         List<Movie> existing = movieRepository.findByTitle(req.getTitle());
         if (!existing.isEmpty()) {
             throw new IllegalArgumentException("Movie with this title already exists");
@@ -54,7 +54,8 @@ public class CatalogService {
         m.setDescription(req.getDescription());
         m.setPosterUrl(req.getPosterUrl());
         m.setActive(true);
-        m.setCreatedAt(OffsetDateTime.now()); // manually set timestamp
+        m.setCreatedAt(OffsetDateTime.now());
+        m.setRating(req.getRating() != null ? req.getRating() : 5.0); // ✅ Default rating = 5
 
         Movie saved = movieRepository.save(m);
 
@@ -65,6 +66,16 @@ public class CatalogService {
         return toDto(saved);
     }
 
+    @Transactional
+    public void updateMissingRatings() {
+        List<Movie> movies = movieRepository.findAll();
+        for (Movie m : movies) {
+            if (m.getRating() == null) {
+                m.setRating(5.0);
+            }
+        }
+        movieRepository.saveAll(movies);
+    }
 
     @Transactional(readOnly = true)
     public List<MovieDto> listMovies() {
@@ -292,6 +303,7 @@ public class CatalogService {
                 .genres(m.getGenres() != null ? Arrays.asList(m.getGenres().split(",")) : List.of())
                 .description(m.getDescription())
                 .posterUrl(m.getPosterUrl())
+                .rating(m.getRating())
                 .active(m.isActive())
                 .createdAt(m.getCreatedAt())
                 .build();

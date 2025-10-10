@@ -1,13 +1,9 @@
 package com.eventura.catalog.domain;
 
-
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
-
-
 import lombok.*;
-
 
 @Entity
 @Table(name = "movies")
@@ -35,6 +31,10 @@ public class Movie {
     private String posterUrl;
 
     private boolean active = true;
+
+    /** ✅ New field with default value 5 */
+    @Column(nullable = false)
+    private Double rating = 5.0;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @org.hibernate.annotations.CreationTimestamp

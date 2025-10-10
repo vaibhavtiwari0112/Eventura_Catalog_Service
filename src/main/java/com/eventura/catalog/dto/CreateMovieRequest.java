@@ -15,6 +15,15 @@ public class CreateMovieRequest {
 
     private String description;
     private String posterUrl;
+    private Double rating;
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
 
     // Getters & setters
     public String getTitle() { return title; }

@@ -22,5 +22,6 @@ public class MovieDto {
     private String description;
     private String posterUrl;
     private boolean active;
+    private Double rating; // ✅ Add this
     private OffsetDateTime createdAt;
 }
